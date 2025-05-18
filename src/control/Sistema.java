@@ -1,7 +1,7 @@
 package control;
-import model.*;
-import java.util.ArrayList;
 import java.io.*;
+import java.util.ArrayList;
+import model.*;
 
 public class Sistema implements Serializable {
     private ArrayList<Figura> figuras;
