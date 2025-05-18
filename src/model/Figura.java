@@ -12,6 +12,9 @@ public abstract class Figura implements Serializable {
     }
 
     public abstract void dibujar(Graphics g);
+    
+    public abstract boolean contiene(int x, int y);
+
 
     public Point getPosicion() { return posicion; }
     public void setPosicion(Point p) { this.posicion = p; }

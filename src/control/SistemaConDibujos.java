@@ -1,8 +1,6 @@
 package control;
-import model.*;
-import view.*;
-
 import javax.swing.SwingUtilities;
+import view.*;
 
 public class SistemaConDibujos {
     public static void main(String[] args) {

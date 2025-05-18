@@ -1,15 +1,20 @@
 package view;
 
+import model.*;
 import control.Sistema;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.*;
-import model.*;
 
 public class MiVentana extends JFrame {
     private Sistema sistema;
     private JPanel lienzo;
+    private Figura figuraSeleccionada = null;
+    private int offsetX, offsetY;
+
 
     public MiVentana(Sistema sistema) {
         this.sistema = sistema;
@@ -50,6 +55,62 @@ public class MiVentana extends JFrame {
             }
         };
         add(lienzo);
+        
+        lienzo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                for (int i = sistema.getFiguras().size() - 1; i >= 0; i--) {
+                    Figura f = sistema.getFiguras().get(i);
+                    if (f.contiene(x, y)) {
+                        figuraSeleccionada = f;
+                        offsetX = x - f.getPosicion().x;
+                        offsetY = y - f.getPosicion().y;
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                figuraSeleccionada = null;
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                // Doble click: elimina figura
+                if (e.getClickCount() == 2) {
+                    for (int i = sistema.getFiguras().size() - 1; i >= 0; i--) {
+                        Figura f = sistema.getFiguras().get(i);
+                        if (f.contiene(x, y)) {
+                            sistema.getFiguras().remove(i);
+                            lienzo.repaint();
+                            return;
+                        }
+                    }
+                } else if (e.getClickCount() == 1) { // Un click: cambia color
+                    for (int i = sistema.getFiguras().size() - 1; i >= 0; i--) {
+                        Figura f = sistema.getFiguras().get(i);
+                        if (f.contiene(x, y)) {
+                            Color nuevoColor = new Color(
+                                (int)(Math.random()*255),
+                                (int)(Math.random()*255),
+                                (int)(Math.random()*255)
+                            );
+                            f.setColor(nuevoColor);
+                            lienzo.repaint();
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+
+
 
         // Listeners
         itemCirculo.addActionListener(e -> agregarCirculo());
@@ -58,25 +119,7 @@ public class MiVentana extends JFrame {
         itemLimpiar.addActionListener(e -> {
             sistema.clearFiguras();
             lienzo.repaint();
-        });
-        itemGuardar.addActionListener(e -> {
-            try {
-                sistema.guardar("figuras.dat");
-                JOptionPane.showMessageDialog(this, "Guardado con éxito");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage());
-            }
-        });
-        itemCargar.addActionListener(e -> {
-            try {
-                sistema.cargar("figuras.dat");
-                lienzo.repaint();
-                JOptionPane.showMessageDialog(this, "Cargado con éxito");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al cargar: " + ex.getMessage());
-            }
-        });
-    }
+        });}
 
     private void agregarCirculo() {
         Random rand = new Random();
