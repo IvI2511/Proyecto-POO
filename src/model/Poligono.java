@@ -38,6 +38,23 @@ public class Poligono extends Figura {
         }
         return (crossings % 2 == 1);
     }
+    
+    public void moverA(int nuevoX, int nuevoY, int offsetX, int offsetY) {
+        // Calcula el desplazamiento respecto al primer vértice (la "posición")
+        int dx = (nuevoX - offsetX) - posicion.x;
+        int dy = (nuevoY - offsetY) - posicion.y;
+
+        for (Point v : vertices) {
+            v.x += dx;
+            v.y += dy;
+        }
+        posicion.x = nuevoX - offsetX;
+        posicion.y = nuevoY - offsetY;
+    }
+
+    public ArrayList<model.Point> getVertices() {
+        return vertices;
+    }
 
 
 }

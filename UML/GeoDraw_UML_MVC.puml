@@ -1,0 +1,89 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "Modelo" {
+    class Point {
+        - x: int
+        - y: int
+        + Point(x: int, y: int)
+    }
+
+    abstract class Figura {
+        - posicion: Point
+        - color: Color
+        + dibujar(g: Graphics): void
+        + estaDentro(x: int, y: int): boolean
+        + setColor(color: Color): void
+    }
+
+    class Circulo {
+        - radio: int
+        + Circulo(pos: Point, color: Color, radio: int)
+        + dibujar(g: Graphics): void
+        + estaDentro(x: int, y: int): boolean
+    }
+
+    class Cuadrado {
+        - lado: int
+        + Cuadrado(pos: Point, color: Color, lado: int)
+        + dibujar(g: Graphics): void
+        + estaDentro(x: int, y: int): boolean
+    }
+
+    class Poligono {
+        - xPoints: int[]
+        - yPoints: int[]
+        + Poligono(pos: Point, color: Color, x: int[], y: int[])
+        + dibujar(g: Graphics): void
+        + estaDentro(x: int, y: int): boolean
+    }
+
+    class Ovalo {
+        - ancho: int
+        - alto: int
+        + Ovalo(pos: Point, color: Color, ancho: int, alto: int)
+        + dibujar(g: Graphics): void
+        + estaDentro(x: int, y: int): boolean
+    }
+
+    class Casa {
+        - base: Cuadrado
+        - techo: Poligono
+        + Casa(pos: Point, color: Color)
+        + dibujar(g: Graphics): void
+        + estaDentro(x: int, y: int): boolean
+    }
+
+    Figura <|-- Circulo
+    Figura <|-- Cuadrado
+    Figura <|-- Poligono
+    Figura <|-- Ovalo
+    Figura <|-- Casa
+
+    Figura --> Point
+    Casa --> Cuadrado
+    Casa --> Poligono
+}
+
+package "Vista" {
+    class MiVentana {
+        - canvas: JPanel
+        + MiVentana()
+        - crearMenu(): void
+        - colorAleatorio(): Color
+    }
+}
+
+package "Controlador" {
+    class SistemaConDibujos {
+        + figuras: ArrayList<Figura>
+        + main(args: String[]): void
+        + cargarFiguras(): void
+    }
+}
+
+SistemaConDibujos --> Figura
+MiVentana --> SistemaConDibujos
+MiVentana --> Figura
+
+@enduml
